@@ -1,9 +1,12 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
 
 module Main where
 
 --------------------------------------------------------------------------------
+import qualified BroadcastChan.Conduit        as BCC
+import           BroadcastChan.Utils          (Action(..), Handler(..))
 import           Control.Applicative          ((<$>), (<*>))
 import           Control.Concurrent.MVar      (modifyMVar_, newMVar, newEmptyMVar, putMVar, readMVar, tryTakeMVar, withMVar, takeMVar, MVar)
 import           Control.Monad
@@ -11,7 +14,7 @@ import           Control.Monad.IO.Class       (MonadIO, liftIO)
 import           Control.Monad.Loops          (whileM_, untilM_)
 import           Control.Monad.Par
 import           Control.Monad.Trans          (lift)
-import           Control.Monad.Trans.Resource (runResourceT)
+import           Control.Monad.Trans.Resource (MonadResource, runResourceT)
 import           Data.Aeson
 import           Data.Attoparsec.Text
 import qualified Data.ByteString.Char8        as SBS
@@ -201,7 +204,8 @@ normalisationConduit options config =
     in if oJsonInput options
         then CB.lines $= C.map (normaliseJsonInput fs)
         --else CB.lines $= conduitPooledMapBuffered 20 (normaliseText fs)
-        else CB.lines $= C.map (normaliseText fs)
+        -- else CB.lines $= C.map (normaliseText fs)
+        else CB.lines $= BCC.parMapM (Simple Terminate) 8 (return . normaliseText fs)
 
 --------------------------------------------------------------------------------
 {- runZeroMQConnection :: Main.Options

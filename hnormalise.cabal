@@ -69,6 +69,8 @@ executable hnormalise-0mq
                      , attoparsec
                      , attoparsec-iso8601
                      , bytestring
+                     , broadcast-chan
+                     , broadcast-chan-conduit
                      , conduit
                      , conduit-combinators
                      , conduit-extra
