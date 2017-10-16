@@ -32,16 +32,16 @@
  - OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -}
 
-{-# LANGUAGE DeriveDataTypeable    #-}
 {-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE DeriveAnyClass         #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE OverloadedStrings     #-}
 
 module HNormalise.Lmod.Internal where
 
 --------------------------------------------------------------------------------
+import           Control.DeepSeq  (NFData)
 import           Data.Text
-import           GHC.Generics (Generic)
+import           GHC.Generics     (Generic)
 --------------------------------------------------------------------------------
 
 data LmodModule = LmodModule
@@ -61,3 +61,7 @@ data LmodLoad = LmodLoad
     , modul    :: !LmodModule
     , filename :: !Text
     } deriving (Show, Eq, Generic)
+
+instance NFData LmodModule
+instance NFData LmodInfo
+instance NFData LmodLoad
