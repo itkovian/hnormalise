@@ -20,6 +20,9 @@ library
                      , HNormalise.Internal
                      , HNormalise.Json
                      , HNormalise.Parser
+                     , HNormalise.Ceph.Internal
+                     , HNormalise.Ceph.Json
+                     , HNormalise.Ceph.Parser
                      , HNormalise.Common.Json
                      , HNormalise.Common.Parser
                      , HNormalise.Common.Internal
@@ -51,6 +54,7 @@ library
                      , ip
                      , permute
                      , resourcet
+                     , scientific
                      , text
                      , time
                      , unordered-containers
@@ -62,6 +66,7 @@ executable hnormalise-0mq
   hs-source-dirs:      0mq
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -funbox-strict-fields -optc-O2
+  other-modules:       Paths_hnormalise
   build-depends:       base
                      , hnormalise
                      , aeson
@@ -94,6 +99,7 @@ executable hnormalise
   hs-source-dirs:      app
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -funbox-strict-fields -optc-O2
+  other-modules:       Paths_hnormalise
   build-depends:       base
                      , hnormalise
                      , aeson
@@ -129,6 +135,7 @@ test-suite hnormalise-test
   hs-source-dirs:      test
   main-is:             Spec.hs
   other-modules:       HNormalise.ParserSpec
+                     , HNormalise.Ceph.ParserSpec
                      , HNormalise.Common.ParserSpec
                      , HNormalise.Lmod.ParserSpec
                      , HNormalise.Shorewall.ParserSpec

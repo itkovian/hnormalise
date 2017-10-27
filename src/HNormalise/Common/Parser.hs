@@ -41,13 +41,34 @@ module HNormalise.Common.Parser where
 import           Control.Applicative   ((<|>))
 import           Data.Attoparsec.Text
 import           Data.Char             (isSpace)
+import           Data.Scientific       (toRealFloat)
 import           Data.Text             (Text)
 import qualified Data.Text             as T
+import           Data.Time             (LocalTime(..), TimeOfDay(..), fromGregorian)
 import qualified Net.IPv4.Text         as IPv4
 import qualified Net.IPv6.Text         as IPv6
 
 --------------------------------------------------------------------------------
 import           HNormalise.Common.Internal
+
+--------------------------------------------------------------------------------
+parseLocalTime :: Parser LocalTime
+parseLocalTime = do
+    y  <- count 4 digit
+    char '-'
+    mm <- count 2 digit
+    char '-'
+    d  <- count 2 digit
+    skipSpace
+    h  <- count 2 digit
+    char ':'
+    m  <- count 2 digit
+    char ':'
+    s  <- scientific
+    return LocalTime
+        { localDay = fromGregorian (read y) (read mm) (read d)
+        , localTimeOfDay = TimeOfDay (read h) (read m) (fromRational $ toRational s)  -- FIXME: should be OK for values < 61, but must be used carefully!
+        }
 
 --------------------------------------------------------------------------------
 hostnameParser :: Parser Text
